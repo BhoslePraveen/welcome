@@ -1,0 +1,15 @@
+# Why this file ? Expose the app to the outside world
+apiVersion: v1   # API version for a Service resource
+kind: Service   # Specifies that this manifest describes a Service
+metadata:
+  name: springboot-welcome-service   # The name of the Service; used to reference this service internally (e.g., via DNS)
+spec:
+  type: LoadBalancer  # Service type that exposes the app externally via a cloud provider's external load balancer (e.g., AWS ELB)
+                      # Other types include ClusterIP (default) and NodePort
+  selector:
+    app: springboot-welcome  # This selects the pods to route traffic to.
+                             # It must match the labels in the pod template of your Deployment
+  ports:
+    - protocol: TCP     # Protocol to be used; Spring Boot apps typically use TCP
+      port: 80          # Port exposed on the LoadBalancer (external-facing)
+      targetPort: 9300  # Port on the container (i.e., the one exposed in your Dockerfile and Spring Boot app)

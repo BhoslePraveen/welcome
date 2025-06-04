@@ -1,0 +1,22 @@
+apiVersion: apps/v1  # API version for Deployment resource; 'apps/v1' is stable for Kubernetes 1.9+
+kind: Deployment    # Specifies that this manifest describes a Deployment
+metadata:
+  name: springboot-welcome-deployment  # Name of the deployment resource
+spec:
+  replicas: 2   # Number of pods to run; helps achieve high availability (2 pods in this case)
+  strategy:
+    type: Recreate  # Strategy to replace all existing pods when updating  # Use 'RollingUpdate' for zero-downtime deployments in production
+  selector:
+    matchLabels:
+      app: springboot-welcome  # Selector to identify which pods this deployment manages (must match template labels below)
+  template:  # Template to describe the pod that will be created
+    metadata:
+      labels:
+        app: springboot-welcome  # Label used for grouping and targeting by selectors (services, monitoring, etc.)
+    spec:
+      containers:
+        - name: springboot-welcome-container   # Name of the container inside the pod
+          image: praveenvtc/springboot-welcome   # Docker image to use (from Docker Hub)
+          imagePullPolicy: Always               # Always pull the image to get the latest version on each deployment
+          ports:
+            - containerPort: 9300   # The port your Spring Boot app is exposing internally (matches EXPOSE in Dockerfile)
